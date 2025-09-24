@@ -1,0 +1,15 @@
+FROM maven:3.8.3-openjdk-17
+
+# Copy code into container
+COPY . /opt/
+WORKDIR /opt
+
+# Replace application.properties and build without running tests
+RUN rm -f src/main/resources/application.properties && \
+    cp -f application.properties src/main/resources/application.properties && \
+    mvn clean package -DskipTests
+
+# Run the Spring Boot app
+WORKDIR target/
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","student-registration-backend-0.0.1-SNAPSHOT.jar"]
